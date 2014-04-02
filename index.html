@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="js/vendor/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="js/vendor/tablesorter/css/theme.default.css">
+        <link rel="stylesheet" href="js/vendor/slider/css/slider.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script data-main="js/main" src="js/vendor/requirejs/require.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="jumbotron">
+            <h2>Topcrunch DB: Feb 28th, 2014</h2>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="lead bg-subheader" style="padding-top: 5px; padding-bottom: 5px; text-indent: 1em;">CPU Filters</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>CPU</b></div>
+                        <div class="btn-group col-xs-6 cpu" data-tag="byProcessor">
+                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">All<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a>All</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b># of CPUs</b></div>
+                        <div class="col-xs-6">
+                            <input type="text" id="cpus" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="[1,100]" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b># of Cores per CPU</b></div>
+                        <div class="col-xs-6">
+                            <input type="text" id="cpuCoresPerCPU" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="[1,100]" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="lead bg-subheader" style="padding-top: 5px; padding-bottom: 5px; text-indent: 1em;">RAM Filters</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>RAM Bus Speed</b></div>
+                        <div class="col-xs-6">
+                            <input type="text" id="ramBus" data-slider-min="0" data-slider-max="2000" data-slider-step="100" data-slider-value="[0,2000]" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>RAM per CPU</b></div>
+                        <div class="col-xs-6">
+                            <input type="text" id="ramPerCPU" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="[1,100]" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="hide">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="lead bg-subheader" style="padding-top: 5px; padding-bottom: 5px; text-indent: 1em;">Software Filters</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>Operating System</b></div>
+                        <div class="btn-group col-xs-6 os" data-tag="byOS">
+                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">All<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a>All</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>Problem Name</b></div>
+                        <div class="btn-group col-xs-6 problem" data-tag="byProblem">
+                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">All<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a>All</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-11 col-md-11">
+                        <div class="col-xs-6"><b>Code Version</b></div>
+                        <div class="btn-group col-xs-6 codever" data-tag="byCodeVer">
+                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">All<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a>All</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Add your site or application content here -->
+        <br/>
+        <div class="row selectedFilters">
+            <div class="col-xs-12">
+                <div class="alert alert-info"></div>
+            </div>
+        </div>
+        <div class="row svgArea">
+            <div class="col-xs-12">
+                <svg width="100%" height="300"></svg>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 text-center">
+                <div class="btn-group" data-toggle="buttons">
+                    <h5>Graph Mode</h5>
+                    <label class="btn btn-primary active modeSwitch">
+                        <input type="radio" name="options" id="option1">Relative
+                    </label>
+                    <label class="btn btn-primary modeSwitch">
+                        <input type="radio" name="options" id="option2">Absolute
+                    </label>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row tableView">
+            <div class="col-sm-12 col-md-12">
+                <table class="table table-hover tablesorter">
+                    <thead>
+                    <tr>
+                        <th id="computer_system">System name</th>
+                        <th id="processor">Processor</th>
+                        <th id="number_of_cpus"># of CPUs</th>
+                        <th id="cores_per_processor"># of cores per CPU</th>
+                        <th id="cpu_interconnects">CPU interconnect</th>
+                        <th id="number_of_nodes"># of nodes</th>
+                        <th id="ram_bus_speed">RAM bus speed</th>
+                        <th id="ram_per_cpu">RAM per CPU</th>
+                        <th id="operating_system">Operating system</th>
+                        <th id="problem_name">Problem name</th>
+                        <th id="code_version_number">Code version</th>
+                        <th id="wall_clock_speed">Wall clock speed</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+        <!--<script src="js/plugins.js"></script>-->
+        <!--<script src="js/main.js"></script>-->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src='//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>
