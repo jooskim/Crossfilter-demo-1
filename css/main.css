@@ -134,8 +134,26 @@ input#cpus, input#cpuCoresPerCPU, input#ramBus, input#ramPerCPU {
 .table-hover > tbody > tr.fair:hover > th {
     background-color: #e8d7b0;
 }
-
-
+.glyphicon-pencil {
+    cursor: pointer;
+}
+.manualInputContainer {
+    width: 0;
+    height: 0;
+    position: relative;
+    z-index: 10;
+    display: none;
+    left: 60px;
+    top: -60px;
+}
+.manualInputContainer .manualInput {
+    width: 170px;
+    height: auto;
+}
+.manualInputContainer .manualInput .col-xs-5,
+.manualInputContainer .manualInput .col-xs-2 {
+    padding: 2px;
+}
 
 
 

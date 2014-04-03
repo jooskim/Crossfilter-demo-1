@@ -311,9 +311,9 @@ define(['jquery','D3','cf','queue','bootstrap','slider','tablesorter'], function
             }
 
         }
-        var filter1 = summaryWithFilters('byProcessor', ''); // no filter applied
-        var filter2 = summaryWithFilters('byProcessor', 'v.number_of_cpus <= 30'); // one filter applied
-        var filter3 = summaryWithFilters('byProcessor', 'v.number_of_cpus >= 60 && v.ram_bus_speed >= 1000'); // two filters applied
+//        var filter1 = summaryWithFilters('byProcessor', ''); // no filter applied
+//        var filter2 = summaryWithFilters('byProcessor', 'v.number_of_cpus <= 30'); // one filter applied
+//        var filter3 = summaryWithFilters('byProcessor', 'v.number_of_cpus >= 60 && v.ram_bus_speed >= 1000'); // two filters applied
 
         // populate each dropdown menu with the data queried
         var AllCpus = summaryWithFilters('byProcessor','').orderNatural().top(Infinity);
@@ -352,7 +352,7 @@ define(['jquery','D3','cf','queue','bootstrap','slider','tablesorter'], function
         ///////// there seemed to be invalid numbers which were extremely big so I've used the second largest number as the upper limit
         $('#ramPerCPU').attr('data-slider-min',minRamPerCpu).attr('data-slider-max',8192).attr('data-slider-value','['+minRamPerCpu+','+8192+']');
 
-        // set up the sliders
+        // set the behaviors of the sliders tooltips
         $('#cpus, #cpuCoresPerCPU, #ramBus, #ramPerCPU').slider({'handle': 'square'})
             .on('slideStart', function(e){
                 $(this).parent().find('.tooltip').removeClass('hide').css('opacity',1);
@@ -394,34 +394,17 @@ define(['jquery','D3','cf','queue','bootstrap','slider','tablesorter'], function
 
         });
 
-        // filter data
-        $('#cpus').slider().on('slideStop', function(e){
+        // update data when slider value is updated
+        $('input[data-slider-min]').on('slideStop', function(e){
             var split = $(this).val().split(',');
-            var result = byNumOfCpus.filter([parse2Integer(split[0]), parse2Integer(split[1])]).top(Infinity);
+            var result = eval($(this).parent().parent().attr('data-tag')+'.filter')([parse2Integer(split[0]), parse2Integer(split[1])]).top(Infinity);
+            $(this).parent().parent().find('input[id=minVal]').val(parse2Integer(split[0]));
+            $(this).parent().parent().find('input[id=maxVal]').val(parse2Integer(split[1]));
+
             updateGraphics();
             console.log(result);
         });
 
-        $('#cpuCoresPerCPU').slider().on('slideStop', function(e){
-            var split = $(this).val().split(',');
-            var result = byCoresPerProc.filter([parse2Integer(split[0]), parse2Integer(split[1])]).top(Infinity);
-            updateGraphics();
-            console.log(result);
-        });
-
-        $('#ramBus').slider().on('slideStop', function(e){
-            var split = $(this).val().split(',');
-            var result = byRamBusSpd.filter([parse2Integer(split[0]), parse2Integer(split[1])]).top(Infinity);
-            updateGraphics();
-            console.log(result);
-        });
-
-        $('#ramPerCPU').slider().on('slideStop', function(e){
-            var split = $(this).val().split(',');
-            var result = byRamPerCpu.filter([parse2Integer(split[0]), parse2Integer(split[1])]).top(Infinity);
-            updateGraphics();
-            console.log(result);
-        });
 
         /////////////////////////////////////
         // below is the visualization part //
@@ -470,6 +453,7 @@ define(['jquery','D3','cf','queue','bootstrap','slider','tablesorter'], function
         dataPoints.append('line').transition().attr('x1', paddingH+widthOffset*2).attr('x2', paddingH+widthOffset*3).attr('y1', function(d){ return getHeight(d[2], 'byRamBusSpd', 0); }).attr('y2', function(d){ return getHeight(d[3], 'byRamPerCpu', 0); }).style('stroke', function(d){ if(d[4]/globalMaximum[4] < 0.25){ return 'rgba(0,255,0,0.5)'; }else if(d[4]/globalMaximum[4] >= 0.25 && d[4]/globalMaximum[4] < 0.5){ return 'rgba(255,255,0,0.5)'}else if(d[4]/globalMaximum[4] >= 0.5 && d[4]/globalMaximum[4] < 0.75){ return 'rgba(242,101,34,0.5)'}else if(d[4]/globalMaximum[4] >= 0.75 && d[4]/globalMaximum[4] <= 1){ return 'rgba(255,0,0,0.5)'}else{ return 'rgba(0,0,0,0.5)'; } });
         dataPoints.append('line').transition().attr('x1', paddingH+widthOffset*3).attr('x2', paddingH+widthOffset*4).attr('y1', function(d){ return getHeight(d[3], 'byRamPerCpu', 0); }).attr('y2', function(d){ return getHeight(d[4], 'byWallClockTime', 0); }).style('stroke', function(d){ if(d[4]/globalMaximum[4] < 0.25){ return 'rgba(0,255,0,0.5)'; }else if(d[4]/globalMaximum[4] >= 0.25 && d[4]/globalMaximum[4] < 0.5){ return 'rgba(255,255,0,0.5)'}else if(d[4]/globalMaximum[4] >= 0.5 && d[4]/globalMaximum[4] < 0.75){ return 'rgba(242,101,34,0.5)'}else if(d[4]/globalMaximum[4] >= 0.75 && d[4]/globalMaximum[4] <= 1){ return 'rgba(255,0,0,0.5)'}else{ return 'rgba(0,0,0,0.5)'; } });
 
+        // sort by wall clock time by default (asc)
         $('.table').tablesorter({'sortList': [[11,0]]});
 
         $('label.modeSwitch').click(function(){
@@ -488,6 +472,55 @@ define(['jquery','D3','cf','queue','bootstrap','slider','tablesorter'], function
             initializeD3();
             updateGraphics();
         }));
+
+        $('.glyphicon-pencil').show();
+
+        $('.glyphicon-pencil').click(function(e){
+            var selected = $(this);
+
+            var values = selected.parent().find('input').attr('data-slider-value').replace('[','').replace(']','').split(',');
+
+            selected.parent().find('.manualInputContainer .manualInput button').click(function(e){
+                if(selected.parent().find('.manualInputContainer').css('display') != 'none'){
+                    selected.parent().find('.manualInputContainer').hide();
+                    if(isNaN(selected.parent().find('.manualInputContainer .manualInput #minVal').val()) || isNaN(selected.parent().find('.manualInputContainer .manualInput #maxVal').val())){
+                        alert('numbers only');
+                    }else{
+                        selected.parent().find('input').not('.form-control').slider('setValue', [parse2Integer(selected.parent().find('.manualInputContainer .manualInput #minVal').val()), parse2Integer(selected.parent().find('.manualInputContainer .manualInput #maxVal').val())])
+                        selected.parent().find('input').not('.form-control').attr('data-slider-value','['+selected.parent().find('.manualInputContainer .manualInput #minVal').val()+','+selected.parent().find('.manualInputContainer .manualInput #maxVal').val()+']')
+                        var result = eval(selected.parent().attr('data-tag')+'.filter')([parse2Integer(selected.parent().find('.manualInputContainer .manualInput #minVal').val()), parse2Integer(selected.parent().find('.manualInputContainer .manualInput #maxVal').val())]).top(Infinity);
+                        updateGraphics();
+                        console.log(result);
+                    }
+                }
+
+            });
+
+            selected.parent().find('.manualInputContainer').toggle();
+
+        });
+
+        // enhance the usability in the manual input popup: hitting the enter key will update the graphics
+        $('input.form-control').on('keydown',function(e){
+            var container = $(this).parent().parent().parent().parent();
+            if(container.css('display') != 'none'){
+                if(e.which == 13){
+                    container.hide();
+                    if(isNaN(container.parent().find('.manualInputContainer .manualInput #minVal').val()) || isNaN(container.parent().find('.manualInputContainer .manualInput #maxVal').val())){
+                        alert('numbers only');
+                    }else{
+                        container.parent().find('input').not('.form-control').slider('setValue', [parse2Integer(container.parent().find('.manualInputContainer .manualInput #minVal').val()), parse2Integer(container.parent().find('.manualInputContainer .manualInput #maxVal').val())])
+                        container.parent().find('input').not('.form-control').attr('data-slider-value','['+container.parent().find('.manualInputContainer .manualInput #minVal').val()+','+container.parent().find('.manualInputContainer .manualInput #maxVal').val()+']')
+                        var result = eval(container.parent().attr('data-tag')+'.filter')([parse2Integer(container.parent().find('.manualInputContainer .manualInput #minVal').val()), parse2Integer(container.parent().find('.manualInputContainer .manualInput #maxVal').val())]).top(Infinity);
+                        updateGraphics();
+                        console.log(result);
+                    }
+
+                }
+            }
+
+        });
+
 
         console.log('done');
 
